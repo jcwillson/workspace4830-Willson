@@ -22,20 +22,22 @@ public class SimpleFormInsert extends HttpServlet {
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      String userName = request.getParameter("userName");
-      String email = request.getParameter("email");
-      String phone = request.getParameter("phone");
+      String unitName = request.getParameter("uName");
+      String unitSize = request.getParameter("uSize");
+      String unitPoint = request.getParameter("uPoint");
+      String unitAddl = request.getParameter("uAddl");
 
       Connection connection = null;
-      String insertSql = " INSERT INTO myTable (id, MYUSER, EMAIL, PHONE) values (default, ?, ?, ?)";
+      String insertSql = " INSERT INTO MyTableTech (id, UNIT_NAME, UNIT_SIZE, UNIT_POINT, UNIT_ADDL) values (default, ?, ?, ?, ?)";
 
       try {
          DBConnection.getDBConnection(getServletContext());
          connection = DBConnection.connection;
          PreparedStatement preparedStmt = connection.prepareStatement(insertSql);
-         preparedStmt.setString(1, userName);
-         preparedStmt.setString(2, email);
-         preparedStmt.setString(3, phone);
+         preparedStmt.setString(1, unitName);
+         preparedStmt.setString(2, unitSize);
+         preparedStmt.setString(3, unitPoint);
+         preparedStmt.setString(4, unitAddl);
          preparedStmt.execute();
          connection.close();
       } catch (Exception e) {
@@ -54,12 +56,14 @@ public class SimpleFormInsert extends HttpServlet {
             "<h2 align=\"center\">" + title + "</h2>\n" + //
             "<ul>\n" + //
 
-            "  <li><b>User Name</b>: " + userName + "\n" + //
-            "  <li><b>Email</b>: " + email + "\n" + //
-            "  <li><b>Phone</b>: " + phone + "\n" + //
+            "  <li><b>Unit Name</b>: " + unitName + "\n" + //
+            "  <li><b>Unit Size</b>: " + unitSize + "\n" + //
+            "  <li><b>Unit Points</b>: " + unitPoint + "\n" + //
+            "  <li><b>Unit Additional Info</b>: " + unitAddl + "\n" + //
 
             "</ul>\n");
 
+      out.println("<a href=/webproject/simpleFormInsert.html>Insert Data</a> <br>");
       out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
       out.println("</body></html>");
    }

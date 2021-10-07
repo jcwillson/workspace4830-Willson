@@ -20,11 +20,12 @@ public class SimpleFormSearch extends HttpServlet {
    }
 
    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-      String keyword = request.getParameter("keyword");
-      search(keyword, response);
+      String keyword1 = request.getParameter("keyword1");
+      String keyword2 = request.getParameter("keyword2");
+      search(keyword1, keyword2, response);
    }
 
-   void search(String keyword, HttpServletResponse response) throws IOException {
+   void search(String keyword1, String keyword2, HttpServletResponse response) throws IOException {
       response.setContentType("text/html");
       PrintWriter out = response.getWriter();
       String title = "Database Result";
@@ -42,30 +43,57 @@ public class SimpleFormSearch extends HttpServlet {
          DBConnection.getDBConnection(getServletContext());
          connection = DBConnection.connection;
 
-         if (keyword.isEmpty()) {
-            String selectSQL = "SELECT * FROM myTable";
+         //No data branch
+         if (keyword1.isEmpty() && keyword2.isEmpty()) {
+            String selectSQL = "SELECT * FROM MyTableTech";
             preparedStatement = connection.prepareStatement(selectSQL);
-         } else {
-            String selectSQL = "SELECT * FROM myTable WHERE MYUSER LIKE ?";
-            String theUserName = keyword + "%";
+         } 
+         //If only first field filled in
+         else if (keyword2.isEmpty())
+         {
+            String selectSQL = "SELECT * FROM MyTableTech WHERE UNIT_NAME LIKE ?";
+            String theUnitName = keyword1 + "%";
             preparedStatement = connection.prepareStatement(selectSQL);
-            preparedStatement.setString(1, theUserName);
+            preparedStatement.setString(1, theUnitName);
+         }
+         //If only second field filled in
+         else if (keyword1.isEmpty())
+         {
+        	 String selectSQL = "SELECT * FROM MyTableTech WHERE UNIT_SIZE LIKE ?";
+             String theUnitSize = keyword2 + "%";
+             preparedStatement = connection.prepareStatement(selectSQL);
+             preparedStatement.setString(1, theUnitSize);
+         }
+         //Both branch
+         else
+         {
+        	 String selectSQL = "SELECT * FROM MyTableTech WHERE UNIT_NAME LIKE ? && UNIT_SIZE LIKE ?";
+             String theUnitName = keyword1 + "%";
+             String theUnitSize = keyword2 + "%";
+             preparedStatement = connection.prepareStatement(selectSQL);
+             preparedStatement.setString(1, theUnitName);
+             preparedStatement.setString(2, theUnitSize);
          }
          ResultSet rs = preparedStatement.executeQuery();
 
+         int sum = 0;
          while (rs.next()) {
             int id = rs.getInt("id");
-            String userName = rs.getString("myuser").trim();
-            String email = rs.getString("email").trim();
-            String phone = rs.getString("phone").trim();
+            String unitName = rs.getString("unit_name").trim();
+            String unitSize = rs.getString("unit_size").trim();
+            String unitPoint = rs.getString("unit_point").trim();
+            String unitAddl = rs.getString("unit_addl").trim();
 
-            if (keyword.isEmpty() || userName.contains(keyword)) {
+            if (keyword1.isEmpty() || unitName.contains(keyword1)) {
                out.println("ID: " + id + ", ");
-               out.println("User: " + userName + ", ");
-               out.println("Email: " + email + ", ");
-               out.println("Phone: " + phone + "<br>");
+               out.println("Unit Name: " + unitName + ", ");
+               out.println("Unit Size: " + unitSize + ", ");
+               out.println("Unit Points: " + unitPoint + ", ");
+               out.println("Unit Additional Info: " + unitAddl + "<br>");
+               sum += Integer.parseInt(unitPoint);
             }
          }
+         out.println("Total Points: " + sum + "<br>");
          out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
          out.println("</body></html>");
          rs.close();
