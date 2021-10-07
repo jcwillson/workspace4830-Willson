@@ -36,7 +36,7 @@ public class ClearTable extends HttpServlet {
 	   // Set response content type
 	      response.setContentType("text/html");
 	      PrintWriter out = response.getWriter();
-	      String title = "Insert Data to DB table";
+	      String title = "Table Cleared";
 	      String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
 	      out.println(docType + //
 	            "<html>\n" + //
@@ -44,8 +44,6 @@ public class ClearTable extends HttpServlet {
 	            "<body bgcolor=\"#f0f0f0\">\n" + //
 	            "<h2 align=\"center\">" + title + "</h2>\n" + //
 	            "<ul>\n" + //
-
-	            "  <li><b>Table Cleared </b>\n" + //
 	            "</ul>\n");
 
 	      out.println("<a href=/techexercise/simpleFormInsert.html>Insert Data</a> <br>");
