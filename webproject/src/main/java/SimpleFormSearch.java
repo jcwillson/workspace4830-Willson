@@ -94,7 +94,7 @@ public class SimpleFormSearch extends HttpServlet {
             }
          }
          out.println("Total Points: " + sum + "<br>");
-         out.println("<a href=/webproject/simpleFormSearch.html>Search Data</a> <br>");
+         out.println("<a href=/techexercise/simpleFormSearch.html>Search Data</a> <br>");
          out.println("</body></html>");
          rs.close();
          preparedStatement.close();
